@@ -1,0 +1,7 @@
+{% extends 'base.j2' %}
+
+{% block content %}
+{% for lease in leases %}
+<pre>{{ lease }}</pre>
+{% endfor %}
+{% endblock %}

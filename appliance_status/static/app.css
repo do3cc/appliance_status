@@ -1,0 +1,19 @@
+.passed {
+  color: green;
+}
+.failed {
+  color: red;
+}
+body {
+  max-width: 80rem;
+}
+.interfaces .virtual {
+  color: #ccc;
+}
+.interfaces .default {
+  font-weight: bold;
+}
+
+nav a.active {
+  color: darkorange !important;
+}

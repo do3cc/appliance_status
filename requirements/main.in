@@ -1,0 +1,9 @@
+Flask
+requests==2.25.0
+attrs
+paho-mqtt
+structlog
+ntplib
+gunicorn
+pip
+setuptools

@@ -1,0 +1,89 @@
+{% extends 'base.j2' %}
+
+{% block content %}
+<h2>Network interfaces</h2>
+
+<table class="interfaces">
+    <thead>
+        <tr>
+            <th>Interface</th>
+
+            <th>MAC Address</th>
+
+            <th>IP</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for network_info_entry in network_info %}
+        <tr class="{{ 'default' if network_info_entry.default }} {{ 'physical' if network_info_entry.is_physical else 'virtual' }}">
+            <td>{{ network_info_entry.ifname }} </td>
+            <td>{{ network_info_entry.address }} </td>
+            <td>
+                <ul>
+                    {% for addr_info_entry in network_info_entry.addr_info %}
+                    <li>{{ addr_info_entry.local }}/{{ addr_info_entry.prefixlen }}  {{ "dynamic" if addr_info_entry.dynamic==true }}<br>Netmask: {{ addr_info_entry.netmask }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Internet Access</h2>
+
+Via Network Interface {{ default_route.IF }}, Gateway {{ default_route.GW }}
+
+<h2>Network Tests</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Test Type</th>
+            <th>Test URL</th>
+            <th>Status Code</th>
+            <th>Reason</th>
+            <th>Pass</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for network_test in network_tests %}
+        <tr>
+            <td>{{ network_test.test_type }} 
+                {% if not network_test.passed %}<br>
+                <strong> {{ network_test.description }} </strong>
+                {% endif %}
+            </td>
+            <td>{{ network_test.address }}</td>
+            <td>{{ network_test.status_code }}</td>
+            <td>{{ network_test.reason }}</td>
+            <td class="{{ 'passed' if network_test.passed else 'failed' }}">{{ "✓" if network_test.passed else "🗙" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2> Initial configuration for {{ form_schema.name }} </h2>
+
+<div>Schema Version: {{ form_schema.version }}</div>
+<div id="form_error" style="display: none">
+    The values you entered are invalid. They have not been saved. If you want to see the currently stored values, reload
+    the page.<br>
+    Ihre neu eingegeben Werte waren ungültig und wurden NICHT übernommen. Um Ihre alten Eingaben zu sehen, können Sie
+    diese Seite neu laden.
+</div>
+<form action="/update" method="POST" id="appliance_config">
+    <ul>
+        {% for schema_field in form_schema.schema %}
+        <li>
+            <label for="{{ schema_field.key }}">{{ schema_field.name }}: </label>
+            <input type="text" id="{{ schema_field.key }}" name="{{ schema_field.key }}"
+                value="{{ schema_field.value }}">
+        </li>
+        {% endfor %}
+    </ul>
+    <div>
+        <input type="submit" value="Save changes">
+    </div>
+</form>
+{% endblock %}

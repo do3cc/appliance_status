@@ -1,0 +1,6 @@
+{
+  "SCHEMA": "examples/schema.json",
+  "TESTS": "examples/tests.json",
+  "CONFIG_FILE_OUT": "config.json",
+  "LEASES": "examples/leases"
+}

@@ -1,0 +1,12 @@
+black
+flake8
+pip-tools
+flake8-bugbear
+isort
+pydocstyle
+pycodestyle
+mypy
+types-requests
+pytest
+pytest-cov
+pytest-faker
