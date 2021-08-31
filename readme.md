@@ -1,6 +1,6 @@
 # Status Page
 
-This project allows a person to debug basic issues of a a software appliances and basic configuration of the same appliance.
+This project allows a person to debug basic issues of a a software appliance and basic configuration of the same appliance.
 
 The web application will show you the following information:
 
@@ -45,8 +45,8 @@ Some tests will try to verify the certificate and issue a warning, if the cert c
 ### config file
 
 Link a provided schema file to `/usr/src/app/schema.json`. It must contain a valid schema.
-Link a file to which configurations will be written to `/usr/src/app/config.json`. It will contain schema information and provided values.
-Warning, if the config file does not exist, the -v parameter of docker, will create a directory with that name!
+Link a local file to `/usr/src/app/config.json` in the docker container. The application will write new configurations to this file. It will contain schema information and provided values.
+Warning, if the config file does not exist, the -v parameter of docker will create a directory with that name!
 The value will be under the key _value_.
 See the provided _schema.json_ for an example.
 
@@ -55,9 +55,9 @@ The name will be shown in the app.
 Each schema field requires _name_, _key_, _type_normalizer_. While name and key is self explanatory, the type normalizer must match a normalizer method provided with the project.
 
 Currently there are only _port_ and _azAZ_. Port validates that the port number is valid, azAZ validates that the values are only ascii alphabet letters.
-That is right, the normalizer validates and normalizes.
+Yes, the normalizer validates and normalizes.
 
-### leases
+### Leases
 
 It can be very beneficial for complex problems to see the dhcp configuration one got. systemd exposes this in a undocumented format.
 If you mount this directory readonly, a special page will show these leases.
@@ -71,7 +71,7 @@ Errors will be caught, but currently the application does not provide informatio
 ## Example
 
 Get the `config.json` and the `tests.json` from this repository and put them into a directory. create an empty `config.json`.
-Then execute:
+Then execute on a linux system:
 
 ```shell
 docker run -it --rm \
