@@ -1,0 +1,27 @@
+{
+  "name": "appliance_status_js",
+  "version": "1.0.0",
+  "description": "Browser javascript code for the app appliance_status",
+  "repository": "https://github.com/do3cc/appliance_status",
+  "author": "Patrick Gerken",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "canvas": "^2.8.0",
+    "chai": "^4.3.4",
+    "jquery-jsdom": "^1.0.0",
+    "jsdom": "^17.0.0",
+    "mocha": "^9.1.1",
+    "source-map-support": "^0.5.19",
+    "webpack": "^5.51.2",
+    "webpack-cli": "^4.8.0"
+  },
+  "dependencies": {
+    "jquery": "3.3.1",
+    "yarn": "^1.22.11"
+  },
+  "scripts": {
+    "build": "webpack ./app/src/page.js",
+    "test": "TESTBUILD=true webpack --mode=development  && mocha test-dist/main.js --require source-map-support/register && rm -rf test-dist"
+  }
+}
