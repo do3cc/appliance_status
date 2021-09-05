@@ -21,7 +21,7 @@
             <td>
                 <ul>
                     {% for addr_info_entry in network_info_entry.addr_info %}
-                    <li>{{ addr_info_entry.local }}/{{ addr_info_entry.prefixlen }}  {{ "dynamic" if addr_info_entry.dynamic==true }}<br>Netmask: {{ addr_info_entry.netmask }}</li>
+                    <li>{{ addr_info_entry.local }}/{{ addr_info_entry.prefixlen }}  {{ "dynamic" if addr_info_entry.dynamic==true }}{% if addr_info_entry.netmask %} <br>Netmask: {{ addr_info_entry.netmask }} {% endif %} </li>
                     {% endfor %}
                 </ul>
             </td>
