@@ -147,3 +147,8 @@ workspace.code-workspace
 config.json
 schema.json
 tests.json
+
+# js built files copied to python
+appliance_status_py/appliance_status/static/main.js
+appliance_status_py/appliance_status/static/main.js.LICENSE.txt
+appliance_status_py/appliance_status/static/main.js.map
