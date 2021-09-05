@@ -2,7 +2,7 @@ let glob = require("glob");
 
 let entry = __dirname + "/app/src/page.js";
 let outputPath = __dirname + "/dist/";
-let devtool = "";
+let devtool = "source-map";
 let target = "web";
 let externals = {};
 if (process.env.TESTBUILD) {
