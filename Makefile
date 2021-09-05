@@ -5,10 +5,13 @@ run: build
         -v ${PWD}/appliance_status_py/examples/tests.json:/usr/src/app/tests.json:ro \
         -v ${PWD}/appliance_status_py/examples/schema.json:/usr/src/app/schema.json:ro \
         --network="host" \
-		appliance_status
+		do3cc/appliance_status
 
 build:
-	docker build -t appliance_status .
+	docker build -t do3cc/appliance_status .
+
+push: build
+	docker push do3cc/appliance_status:latest
 
 test:
 	cd appliance_status_py && make test && cd ../appliance_status_js && yarn && yarn && yarn test
