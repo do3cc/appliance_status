@@ -3,16 +3,16 @@ Flask application config.
 
 Responsible for configuring the web application and routing
 """
-
 import json
 import os
 
 import structlog
 from flask import Flask, abort, render_template, request
+
 from appliance_status import network
 from appliance_status.config_manager import ConfigManager
-from appliance_status.test_manager import ATestManager
 from appliance_status.leases_manager import LeasesManager
+from appliance_status.test_manager import ATestManager
 
 app = Flask(__name__)
 app.config.from_file(os.path.abspath("./app_config.json"), load=json.load)
