@@ -10,7 +10,7 @@ function extendButtonBehavior(button, form){
 
 function extendFormBehavior(form, form_error){
     form.submit(function (event) {
-        var formData = {};
+        var formData = {}, button = form.find('button');
         event.preventDefault();
         form.find("input[type=text]").each(function (item) {
             formData[item.name] = item.value;
