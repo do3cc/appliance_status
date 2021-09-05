@@ -1,0 +1,3 @@
+# Only used for dependabot!
+-r requirements/dev.txt
+-r requirements/main.txt
