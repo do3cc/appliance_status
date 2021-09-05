@@ -71,7 +71,9 @@ Errors will be caught, but currently the application does not provide informatio
 ## Example
 
 Get the `config.json` and the `tests.json` from this repository and put them into a directory. create an empty `config.json`.
-Then execute on a linux system:
+If you won't create an empty config.json, Docker will create a directory and
+the application will fail!
+Finally execute on a linux system:
 
 ```shell
 docker run -it --rm \
@@ -80,5 +82,8 @@ docker run -it --rm \
  -v ${PWD}/config.json:/usr/src/app/config.json \
  -v /run/systemd/netif/leases/:/usr/src/app/leases:ro \
  --network="host" \
- appliancestatus
+ appliance_status
 ```
+
+If you have the package installed locally, you can all execute `make run`
+

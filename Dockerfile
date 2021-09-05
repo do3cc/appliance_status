@@ -1,12 +1,14 @@
 FROM python:3
 
+RUN apt-get update && apt-get install -y\
+    iproute2 \
+    && rm -rf /var/lib/apt/lists/*
 WORKDIR /usr/src/app
 
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+COPY appliance_status_py/requirements/main.txt ./
+RUN pip install --no-cache-dir -r main.txt
 
-COPY app.py config_manager.py fake.py network.py test_types.py ./
-COPY static/* ./static/
-COPY templates/* ./templates/
+COPY appliance_status_py/appliance_status ./appliance_status
+COPY app_config.json .
 
-CMD [ "gunicorn", "app:app", "--bind", "0.0.0.0:5000", "--log-level=info", "--workers=2"]
+CMD [ "gunicorn", "appliance_status.app:app", "--bind", "0.0.0.0:5000", "--log-level=info", "--workers=2"]
