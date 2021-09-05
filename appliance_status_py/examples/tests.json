@@ -1,0 +1,37 @@
+[
+    {
+        "TestType": "HTTPTest",
+        "args": [
+            "https://example.com"
+        ],
+        "description": "This is a http test. it will work for both http and https and checks that the answer is 200 or 401"
+    },
+    {
+        "TestType": "MQTTTest",
+        "args": [
+            "test.mosquitto.org", 8883 
+        ],
+        "description": "This is a MQTT test. It will only test, if it connects to mqtt"
+    },
+    {
+        "TestType": "SSLTest",
+        "args": [
+            "region1.argotunnel.com", 7844
+        ],
+        "description": "This is a SSL Test. It tests if the connection is encrypted with TLSv1.2 or TLSv1.3. The limitation is arbitrary. For HTTPS, use HTTPTest instead"
+    },
+    {
+        "TestType": "TCPTest",
+        "args": [
+            "smtp.sendgrid.net", 587, "HELO", "^220"
+        ],
+        "description": "This is a TCP test. It will send data over TCP, and match the response against a provided regular expression"
+    },
+    {
+        "TestType": "NTPTest",
+        "args": [
+            "0.ubuntu.pool.ntp.org"
+        ],
+        "description": "This is an NTP Test, it will send a query for the current time with version 3. The answer contains the version too and it checks that the answer is version 3"
+    }
+]

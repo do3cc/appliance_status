@@ -5,5 +5,3 @@ paho-mqtt
 structlog
 ntplib
 gunicorn
-pip
-setuptools
