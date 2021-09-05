@@ -1,9 +1,11 @@
 """Verify network module functionality."""
 import json
-from appliance_status import network
-import pytest
-import sys
 import math
+import sys
+
+import pytest
+
+from appliance_status import network
 
 
 def test_prefixToNetMaskGood():
@@ -44,19 +46,28 @@ def test_getNetworkInformationGood(mocker):
     subprocess.TimeoutExpired = type("TimeoutExpired", (BaseException,), {})
     stdout = json.dumps(
         [
-            dict(ifname="eth0", addr_info=[dict(prefixlen=8)]),
-            dict(ifname="br222", addr_info=[dict(prefixlen=32)]),
+            dict(ifname="eth0", addr_info=[dict(prefixlen=8, family="inet")]),
+            dict(ifname="eth0", addr_info=[dict(prefixlen=128, family="inet6")]),
+            dict(ifname="br222", addr_info=[dict(prefixlen=32, family="inet")]),
         ]
     )
     expectation = [
         {
-            "addr_info": [{"netmask": "255.0.0.0", "prefixlen": 8}],
+            "addr_info": [{"netmask": "255.0.0.0", "prefixlen": 8, "family": "inet"}],
             "default": True,
             "ifname": "eth0",
             "is_physical": True,
         },
         {
-            "addr_info": [{"netmask": "255.255.255.255", "prefixlen": 32}],
+            "addr_info": [{"prefixlen": 128, "family": "inet6"}],
+            "default": True,
+            "ifname": "eth0",
+            "is_physical": True,
+        },
+        {
+            "addr_info": [
+                {"netmask": "255.255.255.255", "prefixlen": 32, "family": "inet"}
+            ],
             "default": False,
             "ifname": "br222",
             "is_physical": False,

@@ -48,9 +48,11 @@ def getNetworkInformation(default_if):
             entry["default"] = entry["ifname"] == default_if
             entry["is_physical"] = _isPhysicalAddressName(entry["ifname"])
             for addr_info_entry in entry["addr_info"]:
-                addr_info_entry["netmask"] = _prefixToNetmask(
-                    addr_info_entry["prefixlen"]
-                )
+                # Only show netmasks for v4
+                if addr_info_entry["family"] == "inet":
+                    addr_info_entry["netmask"] = _prefixToNetmask(
+                        addr_info_entry["prefixlen"]
+                    )
         return retval
     except subprocess.TimeoutExpired:
         cmd_result.kill()
