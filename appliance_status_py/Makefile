@@ -9,4 +9,7 @@ init:
 
 update: update-debs init
 
+test:
+	pytest appliance_status
+
 .PHONY: udpate-debs init update
