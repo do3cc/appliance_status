@@ -9,3 +9,6 @@ run: build
 
 build:
 	docker build -t appliance_status .
+
+test:
+	cd appliance_status_py && make test && cd ../appliance_status_js && yarn && yarn && yarn test
