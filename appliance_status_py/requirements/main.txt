@@ -7,10 +7,10 @@
 attrs==21.2.0 \
     --hash=sha256:149e90d6d8ac20db7a955ad60cf0e6881a3f20d37096140088356da6c716b0b1 \
     --hash=sha256:ef6aaac3ca6cd92904cdd0d83f629a15f18053ec84e6432106f7a4d04ae4f5fb
-    # via -r requirements/main.in
-certifi==2021.5.30 \
-    --hash=sha256:2bbf76fd432960138b3ef6dda3dde0544f27cbf8546c458e60baf371917ba9ee \
-    --hash=sha256:50b1e4f8446b06f41be7dd6338db18e0990601dce795c2b1686458aa7e8fa7d8
+    # via -r main.in
+certifi==2022.12.7 \
+    --hash=sha256:35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3 \
+    --hash=sha256:4ad3232f5e926d6718ec31cfc1fcadfde020920e278684144551c91769c7bc18
     # via requests
 chardet==3.0.4 \
     --hash=sha256:84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae \
@@ -23,11 +23,11 @@ click==8.0.1 \
 flask==2.0.1 \
     --hash=sha256:1c4c257b1892aec1398784c63791cbaa43062f1f7aeb555c4da961b20ee68f55 \
     --hash=sha256:a6209ca15eb63fc9385f38e452704113d679511d9574d09b2cf9183ae7d20dc9
-    # via -r requirements/main.in
+    # via -r main.in
 gunicorn==20.1.0 \
     --hash=sha256:9dcc4547dbb1cb284accfb15ab5667a0e5d1881cc443e0677b4882a4067a807e \
     --hash=sha256:e0a968b5ba15f8a328fdfd7ab1fcb5af4470c28aaf7e55df02a99bc13138e6e8
-    # via -r requirements/main.in
+    # via -r main.in
 idna==2.10 \
     --hash=sha256:b307872f855b18632ce0c21c5e45be78c0ea7ae4c15c828c20788b26921eb3f6 \
     --hash=sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0
@@ -99,18 +99,18 @@ markupsafe==2.0.1 \
 ntplib==0.4.0 \
     --hash=sha256:899d8fb5f8c2555213aea95efca02934c7343df6ace9d7628a5176b176906267 \
     --hash=sha256:8d27375329ed7ff38755f7b6d4658b28edc147cadf40338a63a0da8133469d60
-    # via -r requirements/main.in
+    # via -r main.in
 paho-mqtt==1.5.1 \
     --hash=sha256:9feb068e822be7b3a116324e01fb6028eb1d66412bf98595ae72698965cb1cae
-    # via -r requirements/main.in
+    # via -r main.in
 requests==2.25.0 \
     --hash=sha256:7f1a0b932f4a60a1a65caa4263921bb7d9ee911957e0ae4a23a6dd08185ad5f8 \
     --hash=sha256:e786fa28d8c9154e6a4de5d46a1d921b8749f8b74e28bde23768e5e16eece998
-    # via -r requirements/main.in
+    # via -r main.in
 structlog==21.1.0 \
     --hash=sha256:62f06fc0ee32fb8580f0715eea66cb87271eb7efb0eaf9af6b639cba8981de47 \
     --hash=sha256:d9d2d890532e8db83c6977a2a676fb1889922ff0c26ad4dc0ecac26f9fafbc57
-    # via -r requirements/main.in
+    # via -r main.in
 urllib3==1.26.6 \
     --hash=sha256:39fb8672126159acb139a7718dd10806104dec1e2f0f6c88aab05d17df10c8d4 \
     --hash=sha256:f57b4c16c62fa2760b7e3d97c35b255512fb6b59a259730f36ba32ce9f8e342f
