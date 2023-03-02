@@ -19,4 +19,4 @@ run_locally:
 get_js:
 	cd ../appliance_status_js && yarn && yarn build && cp dist/* ../appliance_status_py/appliance_status/static
 
-.PHONY: udpate-debs init update
+.PHONY: udpate-debs init update get_js

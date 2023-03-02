@@ -1,6 +1,6 @@
 run: build
 	docker run -it --rm \
-        -v ${PWD}/config.json:/usr/src/app/config.json:ro \
+        -v ${PWD}/config.json:/usr/src/app/config.json:rw \
         -v /run/systemd/netif/leases/:/usr/src/app/leases:ro \
         -v ${PWD}/appliance_status_py/examples/tests.json:/usr/src/app/tests.json:ro \
         -v ${PWD}/appliance_status_py/examples/schema.json:/usr/src/app/schema.json:ro \
@@ -8,6 +8,8 @@ run: build
 		do3cc/appliance_status
 
 build:
+	cd appliance_status_py && make && cd ..
+	cd appliance_status_py && make get_js && cd ..
 	docker build -t do3cc/appliance_status .
 
 push: build

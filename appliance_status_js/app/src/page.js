@@ -1,10 +1,9 @@
 import {extendButtonBehavior, extendFormBehavior} from "./app";
-import $ from "jquery";
 
-$(document).ready(function () {
-    var button = $("form#appliance_config input[type=submit]"),
-        form = $("form#appliance_config"),
-        form_error = $("#form_error");
+document.addEventListener("DOMContentLoaded", () => {
+    const button = document.querySelector("form#appliance_config input[type='submit']");
+    const form = document.querySelector("form#appliance_config");
+    const form_error = document.querySelector("#form_error");
     extendButtonBehavior(button, form);
     extendFormBehavior(form, form_error);
 });

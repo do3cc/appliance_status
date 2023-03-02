@@ -1,17 +1,17 @@
 """Provide all test implementations."""
 from abc import abstractmethod
-import attr
-import paho.mqtt.client as mqtt
 from functools import partial
+from time import ctime
 from time import sleep
-import structlog
+from typing import Protocol
+import attr
+import ntplib
+import paho.mqtt.client as mqtt
+import re
+import requests
 import socket
 import ssl
-import requests
-import ntplib
-from time import ctime
-import re
-from typing import Protocol
+import structlog
 
 
 @attr.s
@@ -62,6 +62,10 @@ def _handle_socket_errors(func):
     def inner(self, *args, **kwargs):
         try:
             return func(self, *args, **kwargs)
+        except ssl.SSLCertVerificationError as exc:
+            return _makeGenericErrorResult(
+                self.test_type, self._address, self.description, exc
+            )
         except socket.gaierror as exc:
             return _makeGenericErrorResult(
                 self.test_type, self._address, self.description, exc
