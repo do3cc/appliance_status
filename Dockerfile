@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y\
 WORKDIR /usr/src/app
 
 COPY appliance_status_py/requirements/main.txt ./
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r main.txt
 
 COPY appliance_status_py/appliance_status ./appliance_status

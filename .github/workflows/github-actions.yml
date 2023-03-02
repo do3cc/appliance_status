@@ -1,6 +1,13 @@
 name: GitHub Actions
 on: [push]
 jobs:
+    Local_docker_build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out repository code
+              uses: actions/checkout@v2
+            - name: Build docker image
+              run: make build
     Test_JS:
         runs-on: ubuntu-latest
         strategy:
