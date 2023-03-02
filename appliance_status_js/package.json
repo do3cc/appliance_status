@@ -16,7 +16,7 @@
     "webpack-cli": "^5.0.1"
   },
   "dependencies": {
-    "yarn": "^1.22.11"
+    "yarn": "^1.22.19"
   },
   "scripts": {
     "build": "webpack ./app/src/page.js",
