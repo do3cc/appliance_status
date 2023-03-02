@@ -8,7 +8,7 @@ run: build
 		do3cc/appliance_status
 
 build:
-	cd appliance_status_py && make && cd ..
+	cd appliance_status_py && make init && cd ..
 	cd appliance_status_py && make get_js && cd ..
 	docker build -t do3cc/appliance_status .
 
