@@ -1,27 +1,31 @@
-import $ from "jquery";
-
 function extendButtonBehavior(button, form){
-    button.attr("disabled", "true");
-    form.change(function () {
-        button.removeAttr("disabled");
+    button.setAttribute("disabled", "disabled");
+    form.addEventListener("change", () => {
+        button.removeAttribute("disabled");
     });
     return button;
 }
 
 function extendFormBehavior(form, form_error){
-    form.submit(function (event) {
-        var formData = {}, button = form.find('button');
+    form.addEventListener("submit", (event) => {
+        const button = form.querySelector("input[type='submit']");
+        const req = new XMLHttpRequest();
+
         event.preventDefault();
-        form.find("input[type=text]").each(function (item) {
-            formData[item.name] = item.value;
-        });
-        $.post("/update", form.serialize())
-            .done(function (data) {
-                form_error.hide();
-                button.attr("disabled", "true");
-            }).fail(function (data) {
-                form_error.show();
-            });
+
+        req.onreadystatechange = () => {
+            if (req.readyState === XMLHttpRequest.DONE) {
+                if (req.status < 300) {
+                    form_error.style.display = 'none';
+                    button.setAttribute("disabled", "true");
+                } else {
+                form_error.style.display = '';
+                }
+            }
+        }
+
+        req.open("POST", "/update");
+        req.send(new FormData(form));
     });
     return form;
 }

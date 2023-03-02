@@ -1,21 +1,24 @@
 import {expect} from "chai";
 import { extendButtonBehavior, extendFormBehavior } from "../src/app";
-import * as jQuery from "jquery-jsdom";
+
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
 
 describe("extendButtonBehavior", function(){
     it("disables the button", function(){
-        const jq = jQuery("<div><form><button/></form></div>");
-        const button = jq.find('button');
-        const form = jq.find('form');
-        expect(extendButtonBehavior(button, form).attr('disabled')).to.equal("disabled");
+        const doc = new JSDOM("<div><form><button/></form></div>").window.document;
+        const button = doc.querySelector('button');
+        const form = doc.querySelector('form');
+        expect(extendButtonBehavior(button, form).getAttribute('disabled')).to.equal("disabled");
     });
     it("reenables the button upon change", function(){
-        const jq = jQuery("<div><form><button/></form></div>");
-        const button = jq.find('button');
-        const form = jq.find('form');
+        const dom = new JSDOM("<div><form><button/></form></div>");
+        const doc = dom.window.document;
+        const button = doc.querySelector('button');
+        const form = doc.querySelector('form');
         extendButtonBehavior(button, form);
-        button.trigger("change");
-        expect(button.attr('disabled')).to.equal(undefined);
+        button.dispatchEvent(new dom.window.Event("change", {bubbles: true}));
+        expect(button.getAttribute('disabled')).to.equal(null);
     })
 })
 

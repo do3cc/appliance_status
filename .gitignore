@@ -116,6 +116,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+share/
 
 # Spyder project settings
 .spyderproject
@@ -152,3 +153,7 @@ tests.json
 appliance_status_py/appliance_status/static/main.js
 appliance_status_py/appliance_status/static/main.js.LICENSE.txt
 appliance_status_py/appliance_status/static/main.js.map
+
+# node
+appliance_status_js/node_modules/
+
