@@ -208,6 +208,7 @@ class SSLTest(ATestProtocol):
 
     def _test_no_verify(self, log):
         context = ssl.create_default_context()
+        context.minimum_version = ssl.TLSVersion.TLSv1_2
         context.check_hostname = False
         context.verify_mode = ssl.CERT_NONE
         with socket.create_connection((self.host, self.port), timeout=1) as sock:
@@ -222,6 +223,7 @@ class SSLTest(ATestProtocol):
     def test(self, log):
         """See Test.test."""
         context = ssl.create_default_context()
+        context.minimum_version = ssl.TLSVersion.TLSv1_2
         try:
             with socket.create_connection((self.host, self.port), timeout=1) as sock:
                 with context.wrap_socket(sock, server_hostname=self.host) as ssock:
