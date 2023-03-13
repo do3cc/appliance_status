@@ -21,6 +21,10 @@ jobs:
         steps:
             - name: Check out repository code
               uses: actions/checkout@v2
+            - name: Set up Python ${{ env.python-version }}
+              uses: actions/setup-python@v4
+              with:
+                  python-version: ${{ env.python-version }}
             - name: Use Node.js ${{ env.node-version }}
               uses: actions/setup-node@v2
               with:
