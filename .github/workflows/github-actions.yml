@@ -10,10 +10,10 @@ jobs:
         steps:
             - name: Check out repository code
               uses: actions/checkout@v2
-            - name: Set up Python ${{ python-version }}
+            - name: Set up Python ${{ env.python-version }}
               uses: actions/setup-python@v4
               with:
-                  python-version: ${{ python-version }}
+                  python-version: ${{ env.python-version }}
             - name: Build docker image
               run: which python && python --version && make build
     Test_JS:
@@ -35,10 +35,10 @@ jobs:
         steps:
             - name: Check out repository code
               uses: actions/checkout@v2
-            - name: Set up Python ${{ python-version }}
+            - name: Set up Python ${{ env.python-version }}
               uses: actions/setup-python@v4
               with:
-                  python-version: ${{ python-version }}
+                  python-version: ${{ env.python-version }}
             - name: run tests
               run: |
                   cd appliance_status_py
