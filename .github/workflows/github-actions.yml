@@ -2,8 +2,8 @@ name: GitHub Actions
 on: [push]
 
 env:
-  - python-version: 3.11
-  - node-version: 16.x
+  python-version: 3.11
+  node-version: 16.x
 
 jobs:
   Local_docker_build:
