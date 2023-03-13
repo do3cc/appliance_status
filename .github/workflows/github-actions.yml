@@ -1,32 +1,30 @@
 name: GitHub Actions
 on: [push]
+
+env:
+  python-version: 3.11
+  node-version: 16.x
 jobs:
     Local_docker_build:
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                python-version: [3.9]
         steps:
             - name: Check out repository code
               uses: actions/checkout@v2
-            - name: Set up Python ${{ matrix.python-version }}
+            - name: Set up Python ${{ python-version }}
               uses: actions/setup-python@v4
               with:
-                  python-version: ${{ matrix.python-version }}
+                  python-version: ${{ python-version }}
             - name: Build docker image
               run: which python && python --version && make build
     Test_JS:
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node_version: [16.x]
         steps:
             - name: Check out repository code
               uses: actions/checkout@v2
-            - name: Use Node.js ${{ matrix.node-version }}
+            - name: Use Node.js ${{ node-version }}
               uses: actions/setup-node@v2
               with:
-                  node-version: ${{ matrix.node-version }}
+                  node-version: ${{ node-version }}
             - name: run tests
               run: |
                   cd appliance_status_js
@@ -34,16 +32,13 @@ jobs:
                   yarn test
     Test_PY:
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                python-version: [3.9]
         steps:
             - name: Check out repository code
               uses: actions/checkout@v2
-            - name: Set up Python ${{ matrix.python-version }}
-              uses: actions/setup-python@v2
+            - name: Set up Python ${{ python-version }}
+              uses: actions/setup-python@v4
               with:
-                  python-version: ${{ matrix.python-version }}
+                  python-version: ${{ python-version }}
             - name: run tests
               run: |
                   cd appliance_status_py
