@@ -3,9 +3,16 @@ on: [push]
 jobs:
     Local_docker_build:
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python_version: [3.9]
         steps:
             - name: Check out repository code
               uses: actions/checkout@v2
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v2
+              with:
+                  python-version: ${{ matrix.python-version }}
             - name: Build docker image
               run: make build
     Test_JS:
@@ -43,4 +50,3 @@ jobs:
                   python -m venv .
                   source ./bin/activate
                   make test
-
