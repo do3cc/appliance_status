@@ -4,7 +4,7 @@ import re
 import subprocess
 
 
-def _prefixToNetmask(prefix):
+def _prefix_to_netmask(prefix):
     if prefix < 0:
         raise ValueError("Only positive values are supported")
     tuples = []
@@ -19,20 +19,21 @@ def _prefixToNetmask(prefix):
 __physical_re = re.compile("^((en|wl|ww)[osxp]|eth)")
 
 
-def _isPhysicalAddressName(name):
+def _is_physical_address_name(name):
     return bool(__physical_re.match(name))
 
 
-def getNetworkInformation(default_if):
+def get_network_information(default_if):
     """
     Return a big tuple of information over the network.
 
     Take the output from ip --json addr and provide more information:
     - Is it the interface to the internet (default route uses this interface)?
       default=true
-    - Is it a phyiscal device and not a virtual? is_pyhsical=true
+    - Is it a physical device and not a virtual? is_physical=true
     - For all addresses, provide a netmask.
     """
+    cmd_result = None
     try:
         cmd_result = subprocess.Popen(["ip", "--json", "addr"], stdout=subprocess.PIPE)
         stdout, stderr = cmd_result.communicate(timeout=2)
@@ -46,25 +47,26 @@ def getNetworkInformation(default_if):
         retval = json.loads(stdout)
         for entry in retval:
             entry["default"] = entry["ifname"] == default_if
-            entry["is_physical"] = _isPhysicalAddressName(entry["ifname"])
+            entry["is_physical"] = _is_physical_address_name(entry["ifname"])
             for addr_info_entry in entry["addr_info"]:
                 # Only show netmasks for v4
                 if addr_info_entry["family"] == "inet":
-                    addr_info_entry["netmask"] = _prefixToNetmask(
+                    addr_info_entry["netmask"] = _prefix_to_netmask(
                         addr_info_entry["prefixlen"]
                     )
         return retval
     except subprocess.TimeoutExpired:
-        cmd_result.kill()
+        if cmd_result is not None:
+            cmd_result.kill()
         raise Exception("Timeout while trying to get network information")
     except (json.JSONDecodeError, KeyError):
         raise Exception("Unknown output format of ip --json addr command")
 
 
-__route_regex = re.compile(r"(?<=via )(?P<GW>[0-9.]{7,15}).*(?<=dev )(?P<IF>\S+)")
+__route_regex = re.compile(r"(?<=via )(?P<GW>[\d.]{7,15}).*(?<=dev )(?P<IF>\S+)")
 
 
-def getDefaultRoute():
+def get_default_route():
     """
     Provide a default route.
 
@@ -72,6 +74,7 @@ def getDefaultRoute():
     - What is the gateway address? `via`
     - What is the device over which the traffic goes? `dev`
     """
+    cmd_result = None
     try:
         cmd_result = subprocess.Popen(
             ["ip", "-4", "route", "show", "default"], stdout=subprocess.PIPE
@@ -86,7 +89,8 @@ def getDefaultRoute():
                 )
             )
     except subprocess.TimeoutExpired:
-        cmd_result.kill()
+        if cmd_result is not None:
+            cmd_result.kill()
         raise Exception("Timeout while trying to get network information")
     match = __route_regex.search(stdout)
     if match is None:

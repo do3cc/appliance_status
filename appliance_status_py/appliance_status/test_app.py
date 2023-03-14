@@ -14,9 +14,9 @@ def test_status(mocker):
 
     template = app.status()
 
-    assert network.getDefaultRoute.called
-    assert test_manager.performNetworkTests.called
-    assert config_manager.getSchemaWithConfig.called
+    assert network.get_default_route.called
+    assert test_manager.perform_network_tests.called
+    assert config_manager.get_schema_with_config.called
     assert renderer.called
     assert template == "success"
 
@@ -29,7 +29,7 @@ def test_leases(mocker):
 
     template = app.leases()
 
-    assert leases_manager.getLeases.called
+    assert leases_manager.get_leases.called
     assert renderer.called
     assert template == "success"
 
@@ -41,7 +41,7 @@ def test_update_good(mocker):
     with app.app.test_request_context():
         text, code = app.update()
 
-    assert config_manager.updateConfig.calles
+    assert config_manager.update_config.calles
     assert "" == text
     assert 204 == code
 
@@ -54,7 +54,7 @@ def test_update_fails(mocker, exception):
     Catch them, return a 400
     """
     config_manager = mocker.patch("appliance_status.app.config_manager")
-    config_manager.updateConfig.side_effect = exception()
+    config_manager.update_config.side_effect = exception()
 
     with app.app.test_request_context():
         with pytest.raises(werkzeug.exceptions.BadRequest):

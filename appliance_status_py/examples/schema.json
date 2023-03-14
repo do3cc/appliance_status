@@ -10,7 +10,7 @@
         {
             "name": "Another parameter for installation script",
             "key": "something_else",
-            "type_normalizer": "azAZ"
+            "type_normalizer": "az_az_upper"
         }
     ]
 }

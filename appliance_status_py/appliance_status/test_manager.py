@@ -5,7 +5,7 @@ from appliance_status import test_types
 
 
 class ATestManager:
-    """Implements all responsabilities of the module."""
+    """Implements all responsibilities of the module."""
 
     def __init__(self, test_config):
         """
@@ -21,7 +21,7 @@ class ATestManager:
                 )
             )
 
-    def performNetworkTests(self, log):
+    def perform_network_tests(self, log):
         """Perform network tests and return the results."""
         futures = []
         with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
