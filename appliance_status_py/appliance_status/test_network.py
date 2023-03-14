@@ -8,18 +8,27 @@ import pytest
 from appliance_status import network
 
 
-def test_prefixToNetMaskGood():
+def test_prefix_to_net_mask_good():
     """For the sake of completeness."""
-    assert "255.128.0.0" == network._prefixToNetmask(9)
+    assert "255.128.0.0" == network._prefix_to_netmask(9)
 
 
 @pytest.mark.parametrize(
-    "bad_prefix", (0, -1, 0.5, math.inf, "horse", 100, sys.maxsize)
+    "bad_prefix", (0.5, math.inf, "horse", 100, sys.maxsize)
 )
-def test_prefixToNetMaskBad(bad_prefix):
+def test_prefix_to_net_mask_bad1(bad_prefix):
     """For the sake of completeness."""
-    with pytest.raises((ValueError, TypeError)):
-        network._prefixToNetmask(bad_prefix)
+    with pytest.raises(TypeError):
+        network._prefix_to_netmask(bad_prefix)
+
+
+@pytest.mark.parametrize(
+    "bad_prefix", (0, -1)
+)
+def test_prefix_to_net_mask_bad2(bad_prefix):
+    """For the sake of completeness."""
+    with pytest.raises(ValueError):
+        network._prefix_to_netmask(bad_prefix)
 
 
 @pytest.mark.parametrize(
@@ -35,12 +44,12 @@ def test_prefixToNetMaskBad(bad_prefix):
         ("", False),
     ),
 )
-def test_isPhysicalAddress(if_name, is_physical):
+def test_is_physical_address(if_name, is_physical):
     """Verify that various strings return the correct result."""
-    assert is_physical == network._isPhysicalAddressName(if_name)
+    assert is_physical == network._is_physical_address_name(if_name)
 
 
-def test_getNetworkInformationGood(mocker):
+def test_get_network_information_good(mocker):
     """At one time, the output will change. Validate that the error makes sense."""
     subprocess = mocker.patch("appliance_status.network.subprocess")
     subprocess.TimeoutExpired = type("TimeoutExpired", (BaseException,), {})
@@ -76,12 +85,12 @@ def test_getNetworkInformationGood(mocker):
     subprocess.Popen().returncode = 0
     subprocess.Popen().communicate.return_value = (stdout, None)
 
-    network_information = network.getNetworkInformation("eth0")
+    network_information = network.get_network_information("eth0")
 
     assert expectation == network_information
 
 
-def test_getNetworkInformationOutputChanged2(mocker):
+def test_get_network_information_output_changed2(mocker):
     """At one time, the output will change. Validate that the error makes sense."""
     subprocess = mocker.patch("appliance_status.network.subprocess")
     subprocess.TimeoutExpired = type("TimeoutExpired", (BaseException,), {})
@@ -90,12 +99,12 @@ def test_getNetworkInformationOutputChanged2(mocker):
     subprocess.Popen().communicate.return_value = (stdout, None)
 
     with pytest.raises(Exception) as exc:
-        network.getNetworkInformation("eth0")
+        network.get_network_information("eth0")
 
     assert ("Unknown output format of ip --json addr command",) == exc.value.args
 
 
-def test_getNetworkInformationOutputChanged1(mocker):
+def test_get_network_information_output_changed1(mocker):
     """At one time, the output will change. Validate that the error makes sense."""
     subprocess = mocker.patch("appliance_status.network.subprocess")
     subprocess.TimeoutExpired = type("TimeoutExpired", (BaseException,), {})
@@ -109,34 +118,34 @@ def test_getNetworkInformationOutputChanged1(mocker):
     subprocess.Popen().communicate.return_value = (stdout, None)
 
     with pytest.raises(Exception) as exc:
-        network.getNetworkInformation("eth0")
+        network.get_network_information("eth0")
 
     assert ("Unknown output format of ip --json addr command",) == exc.value.args
 
 
-def test_getNetworkInformationReturnCodeNotNull(mocker):
+def test_get_network_information_return_code_not_null(mocker):
     """Verify that we fail hard on bad return code of ip command."""
     subprocess = mocker.patch("appliance_status.network.subprocess")
     subprocess.Popen().returncode = 1
     subprocess.Popen().communicate.return_value = (None, None)
 
     with pytest.raises(Exception):
-        network.getNetworkInformation("eth0")
+        network.get_network_information("eth0")
 
 
-def test_getNetworkInformationFailIfTooSlow(mocker):
+def test_get_network_information_fail_if_too_slow(mocker):
     """Verify that we fail hard on bad return code of ip command."""
     subprocess = mocker.patch("appliance_status.network.subprocess")
     subprocess.TimeoutExpired = type("TimeoutExpired", (BaseException,), {})
     subprocess.Popen().communicate.side_effect = subprocess.TimeoutExpired()
 
     with pytest.raises(Exception):
-        network.getNetworkInformation("eth0")
+        network.get_network_information("eth0")
 
     assert 2 == subprocess.Popen().communicate.call_args.kwargs["timeout"]
 
 
-def test_getDefaultRouteGood(mocker, faker):
+def test_get_default_route_good(mocker, faker):
     """Verify that we get a default route that makes sense."""
     subprocess = mocker.patch("appliance_status.network.subprocess")
     subprocess.TimeoutExpired = type("TimeoutExpired", (BaseException,), {})
@@ -146,12 +155,12 @@ def test_getDefaultRouteGood(mocker, faker):
     subprocess.Popen().returncode = 0
     subprocess.Popen().communicate.return_value = (stdout, None)
 
-    route_info = network.getDefaultRoute()
+    route_info = network.get_default_route()
 
     assert expectation == route_info
 
 
-def test_getDefaultRouteCantParseAnswer(mocker):
+def test_get_default_route_cant_parse_answer(mocker):
     """At one time, the output will change. Validate that the error makes sense."""
     subprocess = mocker.patch("appliance_status.network.subprocess")
     subprocess.TimeoutExpired = type("TimeoutExpired", (BaseException,), {})
@@ -160,28 +169,28 @@ def test_getDefaultRouteCantParseAnswer(mocker):
     subprocess.Popen().communicate.return_value = (stdout, None)
 
     with pytest.raises(Exception) as exc:
-        network.getDefaultRoute()
+        network.get_default_route()
 
     assert ("Unknown output format of ip route command",) == exc.value.args
 
 
-def test_getDefaultRouteReturnCodeNotNull(mocker):
+def test_get_default_route_return_code_not_null(mocker):
     """Verify that we fail hard on bad return code of ip command."""
     subprocess = mocker.patch("appliance_status.network.subprocess")
     subprocess.Popen().returncode = 1
     subprocess.Popen().communicate.return_value = (None, None)
 
     with pytest.raises(Exception):
-        network.getDefaultRoute()
+        network.get_default_route()
 
 
-def test_getDefaultRouteFailIfTooSlow(mocker):
+def test_get_default_route_fail_if_too_slow(mocker):
     """Verify that we fail hard on bad return code of ip command."""
     subprocess = mocker.patch("appliance_status.network.subprocess")
     subprocess.TimeoutExpired = type("TimeoutExpired", (BaseException,), {})
     subprocess.Popen().communicate.side_effect = subprocess.TimeoutExpired()
 
     with pytest.raises(Exception):
-        network.getDefaultRoute()
+        network.get_default_route()
 
     assert 2 == subprocess.Popen().communicate.call_args.kwargs["timeout"]

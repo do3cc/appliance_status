@@ -15,7 +15,8 @@ import attr
 class _Normalizers:
     """Normalize values, also fail with ValueError if not normalizable."""
 
-    def port(self, value):
+    @staticmethod
+    def port(value):
         """
         Convert the value to a number, validate that the port is legal.
 
@@ -31,7 +32,8 @@ class _Normalizers:
             raise ValueError("Invalid port value, too large")
         return value
 
-    def azAZ(self, value):
+    @staticmethod
+    def az_az_upper(value):
         """
         Convert a value to a string containing only the letters a-z and A-Z.
 
@@ -42,7 +44,7 @@ class _Normalizers:
             raise ValueError("Too large")
         for key in value:
             if key not in string.ascii_letters:
-                raise ValueError("Charactor not ascii letter")
+                raise ValueError("Character not ascii letter")
         return value
 
 
@@ -57,11 +59,11 @@ class ConfigOnDisk:
     object.
     """
 
-    config_file: str = attr.ib(validator=attr.validators.matches_re(r"^/.*"))
+    config_file: str = attr.ib(validator=attr.validators.matches_re(r"^(/|[A-Z]:).*"))
 
     @property
     def config(self):
-        """JSON represention of the contents of the config file."""
+        """JSON representation of the contents of the config file."""
         try:
             return json.load(open(self.config_file))
         except (FileNotFoundError, json.decoder.JSONDecodeError):
@@ -74,27 +76,27 @@ class ConfigOnDisk:
 
 @attr.s(frozen=True)
 class ConfigManager:
-    """Configmanager implements the responsability of the module."""
+    """Configmanager implements the responsibility of the module."""
 
     config_on_disk: ConfigOnDisk = attr.ib()
     form_schema: Dict[str, Union[str, int, List[Dict[str, str]]]] = attr.ib()
     normalizers = _Normalizers()
 
     @classmethod
-    def makeOne(cls, config_file, form_schema):
+    def make_one(cls, config_file, form_schema):
         """
         Create a Config Manager.
 
         `config_on_disk` must be an absolute path to the configuration.
         If it doesn't exist, it will be created, on demand.
         The directory must exit.
-        `schema` must be the schema definition as json. The syntax is describeb
+        `schema` must be the schema definition as json. The syntax is described
         in the documentation
         """
         config_on_disk = ConfigOnDisk(config_file)
         return cls(config_on_disk, form_schema)
 
-    def getSchemaWithConfig(self):
+    def get_schema_with_config(self):
         """Return the schema, together with already stored values, if they exist."""
         extended_schema = deepcopy(self.form_schema)
         try:
@@ -112,7 +114,7 @@ class ConfigManager:
             pass
         return extended_schema
 
-    def updateConfig(self, form):
+    def update_config(self, form):
         """Update the configuration. Form must be a flask.request.form instance."""
         new_data = []
         written_fields = set()

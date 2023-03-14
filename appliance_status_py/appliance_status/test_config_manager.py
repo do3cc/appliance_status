@@ -8,7 +8,7 @@ import sys
 SCHEMA = dict(
     version=1,
     name="Test",
-    schema=[dict(name="demofield", key="demo", type_normalizer="azAZ")],
+    schema=[dict(name="demo_field", key="demo", type_normalizer="az_az_upper")],
 )
 
 
@@ -48,11 +48,11 @@ def test_port_normalizer_extreme_values(port_number):
         config_manager._Normalizers().port(port_number)
 
 
-def test_azAZgood(faker):
+def test_az_az_upper_good(faker):
     """Try a valid word."""
     word = faker.word()
 
-    assert word == config_manager._Normalizers().azAZ(word)
+    assert word == config_manager._Normalizers().az_az_upper(word)
 
 
 @pytest.mark.parametrize(
@@ -66,7 +66,7 @@ def test_azAZgood(faker):
         lambda f: f.word() * 1000,
     ),
 )
-def test_azAZBad(faker, value):
+def test_az_az_upper_bad(faker, value):
     """
     We deliberately are extremely strict in what we accept.
 
@@ -75,17 +75,17 @@ def test_azAZBad(faker, value):
     word = value(faker)
 
     with pytest.raises(ValueError):
-        assert False is config_manager._Normalizers().azAZ(word), word
+        assert False is config_manager._Normalizers().az_az_upper(word), word
 
 
-def test_azAZEdgeCases():
+def test_az_az_edge_cases():
     """Test what happens with an empty value."""
     word = ""
 
-    assert word == config_manager._Normalizers().azAZ(word)
+    assert word == config_manager._Normalizers().az_az_upper(word)
 
 
-def test_ConfigOnDiskReadGood(tmp_path):
+def test_config_on_disk_read_good(tmp_path):
     """See what happens, when file is not empty and good."""
     config_path = tmp_path / "config.json"
     config_path.write_text("{}")
@@ -103,8 +103,8 @@ def test_ConfigOnDiskReadGood(tmp_path):
         r"X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*",
     ),
 )
-def test_ConfigOnDiskReadEmptyOrInvalid(contents, tmp_path):
-    """Verify that reading an empty or non existing file return a scaffold xml."""
+def test_config_on_disk_read_empty_or_invalid(contents, tmp_path):
+    """Verify that reading an empty or non-existing file return a scaffold xml."""
     config_path = tmp_path / "config.json"
     if contents is not None:
         config_path.write_text(contents)
@@ -113,12 +113,12 @@ def test_ConfigOnDiskReadEmptyOrInvalid(contents, tmp_path):
     assert {"schema": [], "version": -1} == cd.config
 
 
-def test_ConfigManagerMakeOne(tmp_path):
+def test_config_manager_make_one(tmp_path):
     """For the sake of completeness, we run makeOne."""
     config_path = tmp_path / "config.json"
-    config = config_manager.ConfigManager.makeOne(str(config_path), SCHEMA)
+    config = config_manager.ConfigManager.make_one(str(config_path), SCHEMA)
 
-    assert SCHEMA == config.getSchemaWithConfig()
+    assert SCHEMA == config.get_schema_with_config()
 
 
 @pytest.mark.parametrize(
@@ -127,11 +127,11 @@ def test_ConfigManagerMakeOne(tmp_path):
         dict(),
         dict(
             name="Test",
-            schema=[dict(name="demofield", key="demo", type_normalizer="azAZ")],
+            schema=[dict(name="demo_field", key="demo", type_normalizer="az_az_upper")],
         ),
         dict(
             version=1,
-            schema=[dict(name="demofield", key="demo", type_normalizer="azAZ")],
+            schema=[dict(name="demo_field", key="demo", type_normalizer="az_az_upper")],
         ),
         dict(
             version=1,
@@ -145,30 +145,30 @@ def test_ConfigManagerMakeOne(tmp_path):
         dict(
             version=1,
             name="Test",
-            schema=[dict(key="demo", type_normalizer="azAZ")],
+            schema=[dict(key="demo", type_normalizer="az_az_upper")],
         ),
         dict(
             version=1,
             name="Test",
-            schema=[dict(name="demofield", type_normalizer="azAZ")],
+            schema=[dict(name="demo_field", type_normalizer="az_az_upper")],
         ),
         dict(
             version=1,
             name="Test",
-            schema=[dict(name="demofield", key="demo")],
+            schema=[dict(name="demo_field", key="demo")],
         ),
     ),
 )
-def test_ConfigManagerBadConfig(mocker, invalid_data):
+def test_config_manager_bad_config(mocker, invalid_data):
     """Verify that we get an empty config file if the existing schema is invalid."""
     cfg_on_disk = mocker.Mock()
     cfg_on_disk.config = invalid_data
     config = config_manager.ConfigManager(cfg_on_disk, SCHEMA)
 
-    assert SCHEMA == config.getSchemaWithConfig()
+    assert SCHEMA == config.get_schema_with_config()
 
 
-def test_ConfigManagerGoodConfig(mocker, faker):
+def test_config_manager_good_config(mocker, faker):
     """Verify that we get the actual config if all is good."""
     cfg_on_disk = mocker.Mock()
     cfg_on_disk.config = dict(
@@ -176,20 +176,20 @@ def test_ConfigManagerGoodConfig(mocker, faker):
         version=1,
         schema=[
             dict(
-                name="demofield",
+                name="demo_field",
                 key="demo",
                 value=faker.name(),
-                type_normalizer="azAZ",
+                type_normalizer="az_az_upper",
             )
         ],
     )
 
     config = config_manager.ConfigManager(cfg_on_disk, SCHEMA)
 
-    assert cfg_on_disk.config == config.getSchemaWithConfig()
+    assert cfg_on_disk.config == config.get_schema_with_config()
 
 
-def test_ConfigManagerVersionMismatch(mocker, faker):
+def test_config_manager_version_mismatch(mocker, faker):
     """Verify that we get an empty config file if version does not match."""
     cfg_on_disk = mocker.Mock()
     cfg_on_disk.config = dict(
@@ -197,20 +197,20 @@ def test_ConfigManagerVersionMismatch(mocker, faker):
         version=2,
         schema=[
             dict(
-                name="demofield",
+                name="demo_field",
                 key="demo",
                 value=faker.name(),
-                type_normalizer="azAZ",
+                type_normalizer="az_az_upper",
             )
         ],
     )
 
     config = config_manager.ConfigManager(cfg_on_disk, SCHEMA)
 
-    assert SCHEMA == config.getSchemaWithConfig()
+    assert SCHEMA == config.get_schema_with_config()
 
 
-def test_ConfigManagerNameInConfigIsIgnored(mocker, faker):
+def test_config_manager_name_in_config_is_ignored(mocker, faker):
     """
     We provide the name of the schema in the written configuration file for convenience.
 
@@ -222,25 +222,25 @@ def test_ConfigManagerNameInConfigIsIgnored(mocker, faker):
         version=1,
         schema=[
             dict(
-                name="demofield",
+                name="demo_field",
                 key="demo",
-                type_normalizer="azAZ",
+                type_normalizer="az_az_upper",
             )
         ],
     )
 
     config = config_manager.ConfigManager(cfg_on_disk, SCHEMA)
 
-    assert SCHEMA["name"] == config.getSchemaWithConfig()["name"]
+    assert SCHEMA["name"] == config.get_schema_with_config()["name"]
 
 
-def test_ConfigManagerUpdateConfigGood(mocker, faker):
+def test_config_manager_update_config_good(mocker, faker):
     """Verify that valid configurations get written to disk."""
     cfg_on_disk = mocker.Mock()
     form = dict(demo=faker.word())
     config = config_manager.ConfigManager(cfg_on_disk, SCHEMA)
 
-    config.updateConfig(form)
+    config.update_config(form)
 
     assert form["demo"] == cfg_on_disk.config["schema"][0]["value"]
 
@@ -251,15 +251,29 @@ def test_ConfigManagerUpdateConfigGood(mocker, faker):
         {"Demo": "x"},
         {"something else": ""},
         {},
-        {"demo": "x", "invalid": "y"},
-        {"demo": "a b"},  # No space allowed
     ),
 )
-def test_ConfigManagerUpdateConfigBad(mocker, bad_data):
+def test_config_manager_update_config_bad1(mocker, bad_data):
     """Verify that invalid configurations do nto get written to disk."""
     cfg_on_disk = mocker.Mock()
     form = bad_data
     config = config_manager.ConfigManager(cfg_on_disk, SCHEMA)
 
-    with pytest.raises((KeyError, ValueError)):
-        config.updateConfig(form)
+    with pytest.raises(KeyError):
+        config.update_config(form)
+
+@pytest.mark.parametrize(
+    "bad_data",
+    (
+        {"demo": "x", "invalid": "y"},
+        {"demo": "a b"},  # No space allowed
+    ),
+)
+def test_config_manager_update_config_bad2(mocker, bad_data):
+    """Verify that invalid configurations do nto get written to disk."""
+    cfg_on_disk = mocker.Mock()
+    form = bad_data
+    config = config_manager.ConfigManager(cfg_on_disk, SCHEMA)
+
+    with pytest.raises(ValueError):
+        config.update_config(form)

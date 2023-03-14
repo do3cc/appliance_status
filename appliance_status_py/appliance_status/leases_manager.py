@@ -9,13 +9,13 @@ class LeasesManager:
     """
     Implement responsibility of the module.
 
-    To instanciate a manager, provide an absolute path to the directory
+    To instantiate a manager, provide an absolute path to the directory
     that contain lease information
     """
 
-    leases_directory: str = attr.ib(validator=attr.validators.matches_re(r"^/.*"))
+    leases_directory: str = attr.ib(validator=attr.validators.matches_re(r"^(/|[A-Z]:).*"))
 
-    def getLeases(self) -> List[str]:
+    def get_leases(self) -> List[str]:
         """
         Return leases as a list.
 

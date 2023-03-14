@@ -38,7 +38,7 @@ class ErrorResult:
     description = attr.ib()
 
 
-def _makeTimeoutErrorResult(test_type, address, description):
+def _make_timeout_error_result(test_type, address, description):
     return ErrorResult(
         test_type,
         address,
@@ -48,7 +48,7 @@ def _makeTimeoutErrorResult(test_type, address, description):
     )
 
 
-def _makeGenericErrorResult(test_type, address, description, exc):
+def _make_generic_error_result(test_type, address, description, exc):
     return ErrorResult(
         test_type,
         address=address,
@@ -63,15 +63,15 @@ def _handle_socket_errors(func):
         try:
             return func(self, *args, **kwargs)
         except ssl.SSLCertVerificationError as exc:
-            return _makeGenericErrorResult(
+            return _make_generic_error_result(
                 self.test_type, self._address, self.description, exc
             )
         except socket.gaierror as exc:
-            return _makeGenericErrorResult(
+            return _make_generic_error_result(
                 self.test_type, self._address, self.description, exc
             )
         except socket.timeout:
-            return _makeTimeoutErrorResult(
+            return _make_timeout_error_result(
                 self.test_type, self._address, self.description
             )
 
@@ -112,7 +112,8 @@ class MQTTTest(ATestProtocol):
         log.info("Got connected")
         self.connected = True
 
-    def _on_message(self, log, client, userdata, msg):
+    @staticmethod
+    def _on_message(log, client, userdata, msg):
         log = log.bind(client=client, userdata=userdata, msg=msg)
         log.info("Got a message")
 
@@ -145,7 +146,7 @@ class MQTTTest(ATestProtocol):
                 description=self.description,
             )
         else:
-            return _makeTimeoutErrorResult(
+            return _make_timeout_error_result(
                 self.test_type, self._address, self.description
             )
 
@@ -212,10 +213,9 @@ class SSLTest(ATestProtocol):
         context.check_hostname = False
         context.verify_mode = ssl.CERT_NONE
         with socket.create_connection((self.host, self.port), timeout=1) as sock:
-            with context.wrap_socket(sock, server_hostname=self.host) as ssock:
-                ssl_version = ssock.version()
-                log = log.bind(ssl_version=ssl_version)
-                return self._evaluateSslVersionAndReturnResult(
+            with context.wrap_socket(sock, server_hostname=self.host) as secure_sock:
+                ssl_version = secure_sock.version()
+                return self._evaluate_ssl_version_and_return_result(
                     ssl_version, verified=False
                 )
 
@@ -226,16 +226,16 @@ class SSLTest(ATestProtocol):
         context.minimum_version = ssl.TLSVersion.TLSv1_2
         try:
             with socket.create_connection((self.host, self.port), timeout=1) as sock:
-                with context.wrap_socket(sock, server_hostname=self.host) as ssock:
-                    ssl_version = ssock.version()
+                with context.wrap_socket(sock, server_hostname=self.host) as secure_sock:
+                    ssl_version = secure_sock.version()
                     log = log.bind(ssl_version=ssl_version)
-                    return self._evaluateSslVersionAndReturnResult(
+                    return self._evaluate_ssl_version_and_return_result(
                         ssl_version, verified=True
                     )
         except ssl.SSLCertVerificationError:
             return self._test_no_verify(log)
 
-    def _evaluateSslVersionAndReturnResult(self, data, verified):
+    def _evaluate_ssl_version_and_return_result(self, data, verified):
         if data in ["TLSv1.3", "TLSv1.2"]:
             reason = "OK" if verified else "OK but no SSL Verification possible"
 
@@ -271,22 +271,22 @@ class HTTPTest(ATestProtocol):
     test_type = "HTTP Test"
 
     def _test_no_verify(self, log):
-        return self._test(log, BROKEN_SSL=True)
+        return self._test(log, broken_ssl=True)
 
     def test(self, log):
         """See Test.test."""
-        return self._test(log, BROKEN_SSL=False)
+        return self._test(log, broken_ssl=False)
 
-    def _test(self, log, BROKEN_SSL):
+    def _test(self, log, broken_ssl):
         try:
-            req = requests.request("HEAD", self.url, timeout=1, verify=not BROKEN_SSL)
+            req = requests.request("HEAD", self.url, timeout=1, verify=not broken_ssl)
         except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
-            return _makeTimeoutErrorResult(self.test_type, self.url, self.description)
+            return _make_timeout_error_result(self.test_type, self.url, self.description)
         except requests.exceptions.SSLError:
             log.info("Failed to validate cert, no trying without validation")
             return self._test_no_verify(log)
         except requests.exceptions.ConnectionError as exc:
-            return _makeGenericErrorResult(
+            return _make_generic_error_result(
                 self.test_type, self.url, self.description, exc
             )
         except Exception:
@@ -295,7 +295,7 @@ class HTTPTest(ATestProtocol):
 
         reason = (
             req.reason + " but no SSL Verification possible"
-            if BROKEN_SSL
+            if broken_ssl
             else req.reason
         )
         return ATestResult(
@@ -331,7 +331,7 @@ class NTPTest(ATestProtocol):
         try:
             response = client.request(self.host, version=3)
         except ntplib.NTPException as exc:
-            return _makeGenericErrorResult(
+            return _make_generic_error_result(
                 self.test_type, self._address, self.description, exc
             )
         return ATestResult(

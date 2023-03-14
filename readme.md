@@ -54,7 +54,7 @@ Your schema must contain a _version_ and a _name_. The version will be used to v
 The name will be shown in the app.
 Each schema field requires _name_, _key_, _type_normalizer_. While name and key is self explanatory, the type normalizer must match a normalizer method provided with the project.
 
-Currently there are only _port_ and _azAZ_. Port validates that the port number is valid, azAZ validates that the values are only ascii alphabet letters.
+Currently there are only _port_ and _az_az_upper_. Port validates that the port number is valid, azAZ validates that the values are only ascii alphabet letters.
 Yes, the normalizer validates and normalizes.
 
 ### Leases
