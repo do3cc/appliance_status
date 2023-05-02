@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "canvas": "^2.11.0",
+    "canvas": "^2.11.2",
     "chai": "^4.3.7",
     "jsdom": "^21.1.2",
     "mocha": "^10.2.0",
