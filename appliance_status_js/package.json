@@ -7,13 +7,13 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "canvas": "^2.11.0",
+    "canvas": "^2.11.2",
     "chai": "^4.3.7",
-    "jsdom": "^21.1.1",
+    "jsdom": "^21.1.2",
     "mocha": "^10.2.0",
     "source-map-support": "^0.5.19",
-    "webpack": "^5.77.0",
-    "webpack-cli": "^5.0.1"
+    "webpack": "^5.81.0",
+    "webpack-cli": "^5.0.2"
   },
   "dependencies": {
     "yarn": "^1.22.19"
