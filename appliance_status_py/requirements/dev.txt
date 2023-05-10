@@ -102,9 +102,9 @@ flake8==6.0.0 \
     # via
     #   -r requirements/dev.in
     #   flake8-bugbear
-flake8-bugbear==23.3.23 \
-    --hash=sha256:8a218d13abd6904800970381057ce8e72cde8eea743240c4ef3ede4dd0bc9cfb \
-    --hash=sha256:ea565bdb87b96b56dc499edd6cc3ba7f695373d902a5f56c989b74fad7c7719d
+flake8-bugbear==23.5.9 \
+    --hash=sha256:631fa927fbc799e8ca636b849dd7dfc304812287137b6ecb3277821f028bee40 \
+    --hash=sha256:695c84a5d7da54eb35d79a7354dbaf3aaba80de32250608868aa1c85534b2a86
     # via -r requirements/dev.in
 iniconfig==2.0.0 \
     --hash=sha256:2d91e135bf72d31a410b17c16da610a82cb55f6b0477d1a902134b24a455b8b3 \
