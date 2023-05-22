@@ -1,5 +1,5 @@
 Flask
-requests==2.30.0
+requests==2.31.0
 attrs
 paho-mqtt
 structlog
